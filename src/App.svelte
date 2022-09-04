@@ -26,8 +26,14 @@
 
 	}
 	async function getapidata(){
-		const data = await fetch('https://phillychi3.ml/dd/live?name=uto')
-		return await data.json()
+		const data1 = await (await fetch('https://phillychi3.ml/dd/live?name=uto')).json()
+		const data2 = await (await fetch('https://phillychi3.ml/dd/live?name=utonyan')).json()
+		if (data1.laststreamtime > data2.laststreamtime){
+			return data1
+		}
+		else{
+			return data2
+		}
 	}
 	let promise = getapidata();
 
@@ -52,11 +58,21 @@
 			<h2>距離上次開台時間</h2>
 			<p>{day}天{hour}時{min}分{sec}秒</p>
 		{:else if data[0].status == 'LIVE_OFFLINE'}
-			<h2>天使即將開台了!</h2>
-			<iframe width="560" height="315" src={data[0].link} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{#if data[0].platform == 'youtube'}
+				<h2>天使即將開台了!</h2>
+				<iframe width="560" height="315" src={data[0].link} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{:else if data[0].platform == 'twitch'}
+				<h2>天使即將開台了!</h2>
+				<iframe src={data[0].link} title='twitch' height="378" width="620" frameborder="0" scrolling="no" allowfullscreen="true"></iframe>
+			{/if}
 		{:else if data[0].status == 'OK'}
-			<h2>天使正在開台</h2>
-			<iframe width="560" height="315" src={data[0].link} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{#if data[0].platform == 'youtube'}
+				<h2>天使現在正在開台喔!</h2>
+				<iframe width="560" height="315" src={data[0].link} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{:else if data[0].platform == 'twitch'}
+				<h2>天使現在正在開台喔!</h2>
+				<iframe src={data[0].link} title='twitch' height="378" width="620" frameborder="0" scrolling="no" allowfullscreen="true"></iframe>
+			{/if}
 		{/if}
 	{:catch error}
 		<p style="color: red">{error.message}</p>
@@ -89,6 +105,7 @@
 	.bg img {
 		min-height: 100%;
 		width: 100%;
+		background-size: cover;
 		
 	}
 	h1 {
