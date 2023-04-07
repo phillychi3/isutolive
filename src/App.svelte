@@ -26,8 +26,8 @@
 
 	}
 	async function getapidata(){
-		const data1 = await (await fetch('https://phillychi3.ml/dd/live?name=uto')).json()
-		const data2 = await (await fetch('https://phillychi3.ml/dd/live?name=utonyan')).json()
+		const data1 = await (await fetch('https://whitecloud.life/dd/live?name=uto')).json()
+		const data2 = await (await fetch('https://whitecloud.life/dd/live?name=utonyan')).json()
 		if (data1.laststreamtime > data2.laststreamtime){
 			return data1
 		}
